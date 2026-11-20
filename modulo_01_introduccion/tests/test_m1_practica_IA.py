@@ -72,7 +72,7 @@ def test_formatear() -> None:
     ],
 )
 def test_main_realiza_la_conversion_elegida(
-    monkeypatch, capsys, opcion: str, valor: str, esperado: str
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], opcion: str, valor: str, esperado: str
 ) -> None:
     respuestas = iter([opcion, valor, "0"])
     monkeypatch.setattr("builtins.input", lambda *_: next(respuestas))
@@ -84,7 +84,7 @@ def test_main_realiza_la_conversion_elegida(
 
 @pytest.mark.parametrize("opcion", ["7", "texto", ""])
 def test_main_rechaza_opciones_no_validas(
-    monkeypatch, capsys, opcion: str
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], opcion: str
 ) -> None:
     respuestas = iter([opcion, "0"])
     monkeypatch.setattr("builtins.input", lambda *_: next(respuestas))
@@ -94,7 +94,7 @@ def test_main_rechaza_opciones_no_validas(
     assert "Opción no válida" in capsys.readouterr().out
 
 
-def test_main_sale_con_cero(monkeypatch, capsys) -> None:
+def test_main_sale_con_cero(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     monkeypatch.setattr("builtins.input", lambda *_: "0")
 
     conversor.main()
@@ -104,7 +104,7 @@ def test_main_sale_con_cero(monkeypatch, capsys) -> None:
     assert "Hasta luego." in salida
 
 
-def test_main_permite_varias_conversiones(monkeypatch, capsys) -> None:
+def test_main_permite_varias_conversiones(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     respuestas = iter(["1", "0", "3", "10", "0"])
     monkeypatch.setattr("builtins.input", lambda *_: next(respuestas))
 
