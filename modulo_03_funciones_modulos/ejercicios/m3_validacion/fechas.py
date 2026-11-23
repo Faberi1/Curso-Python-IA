@@ -38,7 +38,18 @@ def edad(fecha_nacimiento: str, hoy: date | None = None) -> int:
     >>> edad("2000-06-15", date(2026, 6, 15))
     26
     """
-    raise NotImplementedError
+    if isinstance(fecha_nacimiento, bool):
+        raise ValueError("fecha_nacimiento no puede ser un booleano")
+    if isinstance(fecha_nacimiento, date):
+        nacimiento = fecha_nacimiento
+    else:
+        nacimiento = date.fromisoformat(str(fecha_nacimiento).strip())
+
+    referencia = date.today() if hoy is None else hoy
+    anios = referencia.year - nacimiento.year
+    if (referencia.month, referencia.day) < (nacimiento.month, nacimiento.day):
+        anios -= 1
+    return anios
 
 
 def es_mayor_de_edad(fecha_nacimiento: str, hoy: date | None = None) -> bool:
@@ -47,4 +58,4 @@ def es_mayor_de_edad(fecha_nacimiento: str, hoy: date | None = None) -> bool:
     >>> es_mayor_de_edad("2008-11-24", date(2026, 11, 23))
     False
     """
-    raise NotImplementedError
+    return edad(fecha_nacimiento, hoy) >= MAYORIA_DE_EDAD

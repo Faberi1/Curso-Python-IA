@@ -13,7 +13,7 @@ def hipotenusa(cateto_a: float, cateto_b: float) -> float:
     >>> hipotenusa(3, 4)
     5.0
     """
-    raise NotImplementedError
+    return round(math.hypot(cateto_a, cateto_b), 2)
 
 
 def dias_entre(fecha_inicio: str, fecha_fin: str) -> int:
@@ -24,7 +24,10 @@ def dias_entre(fecha_inicio: str, fecha_fin: str) -> int:
     >>> dias_entre("2026-11-19", "2026-11-27")
     8
     """
-    raise NotImplementedError
+    inicio = date.fromisoformat(fecha_inicio)
+    fin = date.fromisoformat(fecha_fin)
+    diferencia = abs((fin - inicio).days)
+    return diferencia
 
 
 def es_fin_de_semana(fecha_iso: str) -> bool:
@@ -35,7 +38,8 @@ def es_fin_de_semana(fecha_iso: str) -> bool:
     >>> es_fin_de_semana("2026-11-23")
     False
     """
-    raise NotImplementedError
+    fecha = date.fromisoformat(fecha_iso)
+    return fecha.weekday() >= 5
 
 
 def extension(ruta: str) -> str:
@@ -48,7 +52,8 @@ def extension(ruta: str) -> str:
     >>> extension("LEEME")
     ''
     """
-    raise NotImplementedError
+    sufijo= Path(ruta).suffix
+    return sufijo.lstrip(".").lower()
 
 
 def palabra_mas_frecuente(texto: str) -> str | None:
@@ -60,7 +65,11 @@ def palabra_mas_frecuente(texto: str) -> str | None:
     >>> palabra_mas_frecuente("el gato y el perro")
     'el'
     """
-    raise NotImplementedError
+    palabras= texto.lower().split()
+    if not palabras:
+        return None
+    contador=Counter(palabras)
+    return max(contador, key=contador.get)
 
 
 def tirar_dados(cantidad: int, caras: int = 6, semilla: int | None = None) -> list[int]:
@@ -73,4 +82,8 @@ def tirar_dados(cantidad: int, caras: int = 6, semilla: int | None = None) -> li
     >>> len(tirar_dados(3))
     3
     """
-    raise NotImplementedError
+    if cantidad <=0:
+        return []
+    rng= random.Random(semilla)  if semilla is not None else random.Random()
+    return [rng.randint(1, caras) for _ in range(cantidad)]
+
