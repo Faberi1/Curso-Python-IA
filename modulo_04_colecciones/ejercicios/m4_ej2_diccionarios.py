@@ -10,7 +10,9 @@ def punto_medio(a: tuple[float, float], b: tuple[float, float]) -> tuple[float, 
     >>> punto_medio((0, 0), (4, 2))
     (2.0, 1.0)
     """
-    raise NotImplementedError
+    x1,y1 = a
+    x2,y2 = b
+    return ((x1+x2)/2, (y1+y2)/2)
 
 
 def contar_palabras(texto: str) -> dict[str, int]:
@@ -19,7 +21,10 @@ def contar_palabras(texto: str) -> dict[str, int]:
     >>> contar_palabras("El gato y el perro")
     {'el': 2, 'gato': 1, 'y': 1, 'perro': 1}
     """
-    raise NotImplementedError
+    conteo:dict[str,int] = {}
+    for palabra in texto.lower().split():
+        conteo[palabra] = conteo.get(palabra, 0) + 1
+    return conteo
     # Con la librería estándar: dict(Counter(texto.lower().split()))
 
 
@@ -29,7 +34,7 @@ def invertir(diccionario: dict) -> dict:
     >>> invertir({"a": 1, "b": 2})
     {1: 'a', 2: 'b'}
     """
-    raise NotImplementedError
+    return {v: k for k, v in diccionario.items()}
 
 
 def notas_medias(estudiantes: dict[str, list[float]]) -> dict[str, float]:
@@ -41,7 +46,14 @@ def notas_medias(estudiantes: dict[str, list[float]]) -> dict[str, float]:
     >>> notas_medias({"Ada": [9, 10], "Linus": [5, 6, 8]})
     {'Ada': 9.5, 'Linus': 6.33}
     """
-    raise NotImplementedError
+    medias:dict[str,float] = {}
+    for nombre, notas in estudiantes.items():
+        if notas:
+            media = round(sum(notas) / len(notas), 2)
+        else:
+            media = 0.0
+        medias[nombre] = media
+    return medias
 
 
 def mejor_estudiante(estudiantes: dict[str, list[float]]) -> str | None:
@@ -53,8 +65,10 @@ def mejor_estudiante(estudiantes: dict[str, list[float]]) -> str | None:
     >>> mejor_estudiante({"Ada": [9, 10], "Linus": [5, 6, 8]})
     'Ada'
     """
-    raise NotImplementedError
-
+    if not estudiantes:
+        return None
+    medias=notas_medias(estudiantes)
+    return max(medias, key=medias.get)
 
 def total_carrito(carrito: list[tuple[str, int, float]]) -> float:
     """Devuelve el importe total de un carrito, redondeado a dos decimales.
@@ -64,7 +78,10 @@ def total_carrito(carrito: list[tuple[str, int, float]]) -> float:
     >>> total_carrito([("teclado", 2, 45.0), ("raton", 1, 19.9)])
     109.9
     """
-    raise NotImplementedError
+    total = 0.0
+    for producto, unidades, precio in carrito:
+        total += unidades * precio
+    return round(total, 2)
 
 
 def fusionar_inventarios(a: dict[str, int], b: dict[str, int]) -> dict[str, int]:
@@ -75,7 +92,10 @@ def fusionar_inventarios(a: dict[str, int], b: dict[str, int]) -> dict[str, int]
     >>> fusionar_inventarios({"teclado": 5, "raton": 2}, {"raton": 3, "monitor": 1})
     {'teclado': 5, 'raton': 5, 'monitor': 1}
     """
-    raise NotImplementedError
+    resultado = dict(a)
+    for producto, unidades in b.items():
+        resultado[producto] = resultado.get(producto, 0) + unidades
+    return resultado
 
 
 def valor_anidado(datos: dict, ruta: str, por_defecto=None):
@@ -91,4 +111,12 @@ def valor_anidado(datos: dict, ruta: str, por_defecto=None):
     >>> valor_anidado(pedido, "cliente.telefono", "sin datos")
     'sin datos'
     """
-    raise NotImplementedError
+    if not ruta:
+        return por_defecto
+    actual=datos
+    for clave in ruta.split("."):
+        if isinstance(actual, dict) and clave in actual:
+            actual = actual[clave]
+        else:
+            return por_defecto
+    return actual
