@@ -17,7 +17,12 @@ def grafico_barras(serie: pd.Series, titulo: str, etiqueta_y: str = "Importe (�
     El eje X muestra el índice de la serie. La figura lleva el título y la
     etiqueta del eje Y indicados.
     """
-    raise NotImplementedError
+    fig, ax = plt.subplots()
+    etiquetas = [str(idx) for idx in serie.index]
+    ax.bar(etiquetas, serie.values)
+    ax.set_title(titulo)
+    ax.set_ylabel(etiqueta_y)
+    return fig
 
 
 def grafico_lineas(serie: pd.Series, titulo: str, etiqueta_y: str = "Importe (€)") -> Figure:
@@ -26,12 +31,21 @@ def grafico_lineas(serie: pd.Series, titulo: str, etiqueta_y: str = "Importe (�
     Pensado para la evolución mensual: el índice de la serie va en el eje X.
     La figura lleva título, etiqueta del eje Y y rejilla.
     """
-    raise NotImplementedError
+    fig, ax = plt.subplots()
+    etiquetas = [str(idx) for idx in serie.index]
+    ax.plot(etiquetas, serie.values, marker="o")
+    ax.set_title(titulo)
+    ax.set_ylabel(etiqueta_y)
+    ax.grid(True)
+    return fig
 
 
 def histograma(valores, titulo: str, intervalos: int = 10) -> Figure:
     """Devuelve una figura con el histograma de los valores, con ``intervalos`` barras."""
-    raise NotImplementedError
+    fig, ax = plt.subplots()
+    ax.hist(valores, bins=intervalos)
+    ax.set_title(titulo)
+    return fig
 
 
 def panel(por_vendedor: pd.Series, mensual: pd.Series, titulo: str) -> Figure:
@@ -41,7 +55,19 @@ def panel(por_vendedor: pd.Series, mensual: pd.Series, titulo: str) -> Figure:
     "Por vendedor". A la derecha, líneas con la evolución mensual, con el
     título "Evolución mensual". ``titulo`` es el título general de la figura.
     """
-    raise NotImplementedError
+    fig, (ax_izq, ax_der) = plt.subplots(1, 2, figsize=(12, 4))
+
+    etiquetas_vendedor = [str(idx) for idx in por_vendedor.index]
+    ax_izq.bar(etiquetas_vendedor, por_vendedor.values)
+    ax_izq.set_title("Por vendedor")
+
+    etiquetas_mensual = [str(idx) for idx in mensual.index]
+    ax_der.plot(etiquetas_mensual, mensual.values, marker="o")
+    ax_der.set_title("Evolución mensual")
+    ax_der.grid(True)
+
+    fig.suptitle(titulo)
+    return fig
 
 
 def guardar(figura: Figure, ruta: str | Path) -> Path:
@@ -49,4 +75,8 @@ def guardar(figura: Figure, ruta: str | Path) -> Path:
 
     Crea la carpeta de destino si no existe.
     """
-    raise NotImplementedError
+    destino = Path(ruta)
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    figura.savefig(destino, format="png", dpi=150)
+    plt.close(figura)
+    return destino
